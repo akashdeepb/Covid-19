@@ -189,13 +189,13 @@ def menu():
                         plotTimeline(dates,confirm_sum,death_sum,recover_sum)
                     # Generate Selected Country's Daily Graph
                     elif sel == '2':
-                        confirm_sum.append(confirmed_data[dates[0]].sum())
-                        death_sum.append(deaths_data[dates[0]].sum())
-                        recover_sum.append(recovered_data[dates[0]].sum())
+                        confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[0]].sum())
+                        death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[0]].sum())
+                        recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[0]].sum())
                         for i in range(1, len(dates)):
-                            confirm_sum.append(confirmed_data[dates[i]].sum()-confirmed_data[dates[i-1]].sum())
-                            death_sum.append(deaths_data[dates[i]].sum()-deaths_data[dates[i-1]].sum())
-                            recover_sum.append(recovered_data[dates[i]].sum()-recovered_data[dates[i-1]].sum())
+                            confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum()-confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i-1]].sum())
+                            death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum()-deaths_data[deaths_data['Country/Region']==similar[0]][dates[i-1]].sum())
+                            recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum()-recovered_data[recovered_data['Country/Region']==similar[0]][dates[i-1]].sum())
                         plotDaily(dates,confirm_sum,death_sum,recover_sum)
                 else:
                     # Display Possible Matches
