@@ -12,3 +12,7 @@ Python3
 <img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_main.png">
 <img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_timeline.png">
 <img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_country.png">
+
+
+### Why this Project ?
+Eh! Very unplanned Project which esclated quickly into this. "Why didn't you use API?" I was just trying Data Science, this wasn't supposed to be a project. :3 bye
