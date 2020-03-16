@@ -7,3 +7,8 @@ Try Running : `python3 Covid19.py -h` to view essential options.
 
 ## Prerequisites
 Python3
+
+## Screenshots
+<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_main.png">
+<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_timeline.png">
+<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_country.png">
