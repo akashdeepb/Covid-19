@@ -9,9 +9,11 @@ Try Running : `python3 Covid19.py -h` to view essential options.
 Python3
 
 ## Screenshots
-<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_main.png">
+<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid_main.png">
 <img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_timeline.png">
 <img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid19_country.png">
+<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid_versus.png">
+<img src="https://github.com/akashdeepb/Covid-19/blob/master/screenshots/covid_daily.png">
 
 
 ### Why this Project ?
