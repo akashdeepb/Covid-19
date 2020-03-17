@@ -62,28 +62,54 @@ def update(auto=True):
 
 # Method to Plot Complete Time Line Graph
 def plotTimeline(dates,confirm_sum,death_sum,recover_sum):
+    dates_ = []
     for i in range(0,len(dates)):
-        dates[i]=dates[i].split('/20')[0]
+        dates_.append(dates[i].split('/20')[0])
     plt.title("Covid-19 Timeline")
     plt.xlabel('Dates')
-    plt.plot(dates,confirm_sum,label="Confirmed Cases("+str(confirm_sum[len(confirm_sum)-1])+")")
-    plt.plot(dates,death_sum,label="Deaths("+str(death_sum[len(death_sum)-1])+")("+str(round(((death_sum[len(death_sum)-1]/confirm_sum[len(confirm_sum)-1])*100),2))+"%)")
-    plt.plot(dates,recover_sum,label="Recovered("+str(recover_sum[len(recover_sum)-1])+")("+str(round(((recover_sum[len(recover_sum)-1]/confirm_sum[len(confirm_sum)-1])*100),2))+"%)")
+    plt.plot(dates_,confirm_sum,label="Confirmed Cases("+str(confirm_sum[len(confirm_sum)-1])+")")
+    plt.plot(dates_,death_sum,label="Deaths("+str(death_sum[len(death_sum)-1])+")("+str(round(((death_sum[len(death_sum)-1]/confirm_sum[len(confirm_sum)-1])*100),2))+"%)")
+    plt.plot(dates_,recover_sum,label="Recovered("+str(recover_sum[len(recover_sum)-1])+")("+str(round(((recover_sum[len(recover_sum)-1]/confirm_sum[len(confirm_sum)-1])*100),2))+"%)")
     plt.legend()
     plt.show()
 
 
 # Method to Plot Datewise Graph
 def plotDaily(dates,confirm_sum,death_sum,recover_sum):
+    dates_ = []
     for i in range(0, len(dates)):
-        dates[i]=dates[i].split('/20')[0]
+        dates_.append(dates[i].split('/20')[0])
     plt.title("Covid-19 Daily")
     plt.xlabel('Dates')
-    plt.plot(dates,confirm_sum,label="Confirmed Cases("+str(sum(confirm_sum))+")")
-    plt.plot(dates,death_sum,label="Deaths("+str(sum(death_sum))+")")
-    plt.plot(dates,recover_sum,label="Recovered("+str(sum(recover_sum))+")")
+    plt.plot(dates_,confirm_sum,label="Confirmed Cases("+str(sum(confirm_sum))+")")
+    plt.plot(dates_,death_sum,label="Deaths("+str(sum(death_sum))+")")
+    plt.plot(dates_,recover_sum,label="Recovered("+str(sum(recover_sum))+")")
     plt.legend()
     plt.show()
+
+# Method to Return List containing Timeline Data
+def getTimeInfo(dates,data,country=None):
+    total = []
+    if country == None:
+        for i in range(0,len(dates)):
+            total.append(data[dates[i]].sum())
+    else:
+        for i in range(0,len(dates)):
+            total.append(data[data['Country/Region']==country][dates[i]].sum())
+    return total
+
+# Method to Return List containing Daywise Data
+def getDayInfo(dates,data,country=None):
+    total=[]
+    if country == None:
+        total.append(data[dates[0]].sum())
+        for i in range(1,len(dates)):
+            total.append(data[dates[0]].sum()-data[dates[i-1]].sum())
+    else:
+        total.append(data[data['Country/Region']==country][dates[0]].sum())
+        for i in range(1,len(dates)):
+            total.append(data[data['Country/Region']==country][dates[i]].sum()-data[data['Country/Region']==country][dates[i-1]].sum())
+    return total
 
 # Menu for User 
 def menu():
@@ -188,20 +214,15 @@ def menu():
                         recover_sum = []
                         # Generate Selected Country's Timeline Graph
                         if sel == '1':
-                            for i in range(0,len(dates)):
-                                confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum())
-                                death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum())
-                                recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum())
+                            confirm_sum = getTimeInfo(dates,confirmed_data,similar[0])
+                            death_sum = getTimeInfo(dates,deaths_data,similar[0])
+                            recover_sum = getTimeInfo(dates,recovered_data,similar[0])
                             plotTimeline(dates,confirm_sum,death_sum,recover_sum)
                         # Generate Selected Country's Daily Graph
                         elif sel == '2':
-                            confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[0]].sum())
-                            death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[0]].sum())
-                            recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[0]].sum())
-                            for i in range(1, len(dates)):
-                                confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum()-confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i-1]].sum())
-                                death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum()-deaths_data[deaths_data['Country/Region']==similar[0]][dates[i-1]].sum())
-                                recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum()-recovered_data[recovered_data['Country/Region']==similar[0]][dates[i-1]].sum())
+                            confirm_sum = getDayInfo(dates,confirmed_data,similar[0])
+                            death_sum = getDayInfo(dates,deaths_data,similar[0])
+                            recover_sum = getDayInfo(dates,recovered_data,similar[0])
                             plotDaily(dates,confirm_sum,death_sum,recover_sum)
                     else:
                         # Display Possible Matches
@@ -213,7 +234,7 @@ def menu():
             banner()
             exitFlag=False
             while(not exitFlag):
-                print("\n\033[33mEnter -c or --countries to see the List of Countries/Regions\nPress 'Enter key' once you're done entering countries\n\033[36mEnter -x or exit to go back to Main Menu\033[0m\n\n")
+                print("\n\033[33mEnter -c or --countries to see the List of Countries/Regions\nPress 'Enter key' or '-g' or Type 'go' once you're done entering countries\nType 'show' or '-s' to See countries in List\n\033[35mEnter -d or --delete to remove delete the last country added\nType 'clear' to Remove all Countries from List\n\033[36mEnter -x or exit to go back to Main Menu\033[0m\n\n")
                 countries = confirmed_data['Country/Region'].sort_values().unique()
                 versusCountries = []
                 while(True):
@@ -227,19 +248,101 @@ def menu():
                     if sel == '-c' or sel =='--countries':
                         for country in countries:
                             print(country)
-                     elif sel == '-x' or sel == 'exit' or sel == '0':
+                    elif sel == '-s' or sel == 'show':
+                        if len(versusCountries) < 1:
+                            print("\033[31mNo Countries in the List.\033[0m")
+                    elif sel == '-x' or sel == 'exit' or sel == '0':
                         exitFlag=True
                         break
-                    elif sel == "":
-                        # Start Plot
-                        for country in versusCountries:
-                            print(len(versusCountries))
+                    elif sel == "" or sel == 'go' or sel == '-g':
+                        if len(versusCountries) < 1:
+                            print("\nEnter Atleast 1 country into List\n\n")
+                        else:
+                            while(True):
+                                print('''
+                Select from the Following
+                        
+                \033[33mConfirmed\033[0m
+                    1. Generate Confirmed Timeline Graph
+                    2. Generate Confirmed Daily Graph
+                        
+                \033[31mDeaths\033[0m
+                    3. Generate Deaths Timeline Graph
+                    4. Generate Deaths Daily Graph
+
+                \033[32mRecovered\033[0m
+                    5. Generate Recovered Timeline Graph
+                    6. Generate Recovered Daily Graph
+
+                0. Exit
+                                ''')
+                                select = input("Enter your selection : ")
+                                plt.figure('Covid - 19')
+                                if select == '1':
+                                    for country in versusCountries:
+                                        confirm_sum  = []
+                                        confirm_sum = getTimeInfo(dates,confirmed_data,country)
+                                        plt.plot(dates,confirm_sum,label=country+"("+str(confirm_sum[len(confirm_sum)-1])+")")
+                                    plt.title('Versus Graph - Confirmed Data')
+                                    plt.legend()
+                                    plt.show()
+                                elif select == '2':
+                                    for country in versusCountries:
+                                        confirm_sum = []
+                                        confirm_sum = getDayInfo(dates,confirmed_data,country)
+                                        plt.title('Versus Graph - Daywise Confirmation')
+                                        plt.plot(dates,confirm_sum,label=country+"("+str(sum(confirm_sum))+")")
+                                    plt.legend()
+                                    plt.show()
+                                elif select == '3':
+                                    for country in versusCountries:
+                                        death_sum = []
+                                        death_sum = getTimeInfo(dates,deaths_data,country)
+                                        plt.plot(dates,death_sum,label=country+"("+str(death_sum[len(death_sum)-1])+")")
+                                    plt.title('Versus Graph - Deaths Data')
+                                    plt.legend()
+                                    plt.show()
+                                elif select == '4':
+                                    for country in versusCountries:
+                                        death_sum = []
+                                        death_sum = getDayInfo(dates,deaths_data,country)
+                                        plt.plot(dates,death_sum,label=country+"("+str(sum(death_sum))+")")
+                                    plt.title('Versus Graph - Daywise Deaths')
+                                    plt.legend()
+                                    plt.show()
+                                elif select == '5':
+                                    for country in versusCountries:
+                                        recover_sum = []
+                                        recover_sum = getTimeInfo(dates,recovered_data,country)
+                                        plt.plot(dates, recover_sum,label=country+"("+str(recover_sum[len(recover_sum)-1])+")")
+                                    plt.title('Versus Graph - Recover Data')
+                                    plt.legend()
+                                    plt.show()
+                                elif select == '6':
+                                    for country in versusCountries:
+                                        recover_sum = []
+                                        recover_sum = getDayInfo(dates,recovered_data,country)
+                                        plt.plot(dates,recover_sum,label=country+"("+str(sum(recover_sum))+")")
+                                    plt.title('Versus Graph - Recover Graph')
+                                    plt.legend()
+                                    plt.show()
+                                elif select == '0':
+                                    break
+                    elif sel == '-d' or sel == '--delete' or sel == 'del':
+                        if len(versusCountries) == 0:
+                            print("\033[31mList Aleady Empty \033[0m")
+                        else:
+                            print("\033[35mRemoved ",versusCountries[len(versusCountries)-1]," from List\033[0m")
+                            versusCountries.pop()
+                    elif sel == 'clear':
+                        versusCountries = []
+                        print("\033[32mCleared Country List.\033[0m")
                     else:
                         similar = [country for country in countries if sel == country.lower()]
                         if len(similar) < 1:
                             similar = [country for country in countries if sel in country.lower()]
                         if len(similar) < 1:
-                            print("Country Not Found")
+                            print("\033[31mCountry Not Found.\033[0m")
                         elif len(similar) == 1:
                             versusCountries.append(similar[0])
                         else:
@@ -256,7 +359,7 @@ def menu():
         elif selection == '9':
             update(False)
             clear()
-        elif selection == '0':
+        elif selection == '0' or selection == 'exit':
             print("Exiting ... bye <3")
             exit()
 
