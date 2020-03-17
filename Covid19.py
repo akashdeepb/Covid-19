@@ -147,62 +147,64 @@ def menu():
         elif selection == '3':
             clear()
             banner()
-            print("\033[33mEnter -c or --countries to see the List of Countries/Regions\033[0m\n\n")
-            sel = input("Enter Country/Region : ")
-            sel = sel.lower()
-            countries = confirmed_data['Country/Region'].unique()
-            if sel == '-c' or sel == '--countries':
-                # Display All Country Names
-                for country in countries:
-                    print(country)
-                input()
-            else:
-                # Search for Country with similar name
-                similar = [country for country in countries if sel in country.lower()]
-                if len(similar) < 1:
-                    print("Country Not Found.")
-                elif len(similar) == 1:
-                    confirm_sum = confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[len(dates)-1]].sum()
-                    death_sum = deaths_data[deaths_data['Country/Region']==similar[0]][dates[len(dates)-1]].sum()
-                    recover_sum = recovered_data[recovered_data['Country/Region']==similar[0]][dates[len(dates)-1]].sum()
-                    print("\033[34mData found for ",similar[0])
-                    print("Confirmed Cases : ",confirm_sum)
-                    print("Deaths : ",death_sum)
-                    print("Recovered : ",recover_sum,"\033[0m")
-                    print('''
+            while(True):
+                print("\n\033[33mEnter -c or --countries to see the List of Countries/Regions\n\033[36mEnter -x or exit to go back to Main Menu\033[0m\n\n")
+                sel = input("Enter Country/Region : ")
+                sel = sel.lower()
+                countries = confirmed_data['Country/Region'].sort_values().unique()
+                if sel == '-c' or sel == '--countries':
+                    # Display All Country Names
+                    for country in countries:
+                        print(country)
+                # Exit back to Main Menu
+                elif sel == '-x' or sel == 'exit':
+                    break
+                else:
+                    # Search for Country with similar name
+                    similar = [country for country in countries if sel in country.lower()]
+                    if len(similar) < 1:
+                        print("Country Not Found.")
+                    elif len(similar) == 1:
+                        confirm_sum = confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[len(dates)-1]].sum()
+                        death_sum = deaths_data[deaths_data['Country/Region']==similar[0]][dates[len(dates)-1]].sum()
+                        recover_sum = recovered_data[recovered_data['Country/Region']==similar[0]][dates[len(dates)-1]].sum()
+                        print("\033[34mData found for ",similar[0])
+                        print("Confirmed Cases : ",confirm_sum)
+                        print("Deaths : ",death_sum)
+                        print("Recovered : ",recover_sum,"\033[0m")
+                        print('''
                     Options
                     1. Generate Timeline Graph
                     2. Generate Daily Graph
 
                     0. Exit
                     ''')
-                    sel = input("Enter you Selection : ")
-                    confirm_sum = []
-                    death_sum = []
-                    recover_sum = []
-                    # Generate Selected Country's Timeline Graph
-                    if sel == '1':
-                        for i in range(0,len(dates)):
-                            confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum())
-                            death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum())
-                            recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum())
-                        plotTimeline(dates,confirm_sum,death_sum,recover_sum)
-                    # Generate Selected Country's Daily Graph
-                    elif sel == '2':
-                        confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[0]].sum())
-                        death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[0]].sum())
-                        recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[0]].sum())
-                        for i in range(1, len(dates)):
-                            confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum()-confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i-1]].sum())
-                            death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum()-deaths_data[deaths_data['Country/Region']==similar[0]][dates[i-1]].sum())
-                            recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum()-recovered_data[recovered_data['Country/Region']==similar[0]][dates[i-1]].sum())
-                        plotDaily(dates,confirm_sum,death_sum,recover_sum)
-                else:
-                    # Display Possible Matches
-                    print("Found ",len(similar)," Matches")
-                    for country in similar:
-                        print(country)
-                input("Press any key to Continue...")
+                        sel = input("Enter you Selection : ")
+                        confirm_sum = []
+                        death_sum = []
+                        recover_sum = []
+                        # Generate Selected Country's Timeline Graph
+                        if sel == '1':
+                            for i in range(0,len(dates)):
+                                confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum())
+                                death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum())
+                                recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum())
+                            plotTimeline(dates,confirm_sum,death_sum,recover_sum)
+                        # Generate Selected Country's Daily Graph
+                        elif sel == '2':
+                            confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[0]].sum())
+                            death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[0]].sum())
+                            recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[0]].sum())
+                            for i in range(1, len(dates)):
+                                confirm_sum.append(confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i]].sum()-confirmed_data[confirmed_data['Country/Region']==similar[0]][dates[i-1]].sum())
+                                death_sum.append(deaths_data[deaths_data['Country/Region']==similar[0]][dates[i]].sum()-deaths_data[deaths_data['Country/Region']==similar[0]][dates[i-1]].sum())
+                                recover_sum.append(recovered_data[recovered_data['Country/Region']==similar[0]][dates[i]].sum()-recovered_data[recovered_data['Country/Region']==similar[0]][dates[i-1]].sum())
+                            plotDaily(dates,confirm_sum,death_sum,recover_sum)
+                    else:
+                        # Display Possible Matches
+                        print("Found ",len(similar)," Matches")
+                        for country in similar:
+                            print(country)
         # Another Free Promo :3
         elif selection == '4':
             webbrowser.open_new('https://covid19.locale.ai')
