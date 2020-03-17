@@ -229,6 +229,7 @@ def menu():
                         print("Found ",len(similar)," Matches")
                         for country in similar:
                             print(country)
+        # Versus Stats [Feature Idea by @j0el (https://github.com/j0el)]
         elif selection == '4':
             clear()
             banner()
