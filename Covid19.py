@@ -104,7 +104,7 @@ def getDayInfo(dates,data,country=None):
     if country == None:
         total.append(data[dates[0]].sum())
         for i in range(1,len(dates)):
-            total.append(data[dates[0]].sum()-data[dates[i-1]].sum())
+            total.append(data[dates[i]].sum()-data[dates[i-1]].sum())
     else:
         total.append(data[data['Country/Region']==country][dates[0]].sum())
         for i in range(1,len(dates)):
@@ -152,23 +152,17 @@ def menu():
         # Validate User Selection
         # World Timeline
         if selection == '1':
-            for i in range(0,len(dates)):
-                confirm_sum.append(confirmed_data[dates[i]].sum())
-                death_sum.append(deaths_data[dates[i]].sum())
-                recover_sum.append(recovered_data[dates[i]].sum())
+            confirm_sum = getTimeInfo(dates,confirmed_data)
+            death_sum = getTimeInfo(dates,deaths_data)
+            recover_sum = getTimeInfo(dates,recovered_data)
             plotTimeline(dates,confirm_sum,death_sum,recover_sum)
         # World Daily Graph
         elif selection == '2':
             clear()
             banner()
-            confirm_sum.append(confirmed_data[dates[0]].sum()) 
-            death_sum.append(deaths_data[dates[0]].sum())
-            recover_sum.append(recovered_data[dates[0]].sum())
-
-            for i in range(1,len(dates)):
-                confirm_sum.append(confirmed_data[dates[i]].sum()-confirmed_data[dates[i-1]].sum())
-                death_sum.append(deaths_data[dates[i]].sum()-deaths_data[dates[i-1]].sum())
-                recover_sum.append(recovered_data[dates[i]].sum()-recovered_data[dates[i-1]].sum())
+            confirm_sum = getDayInfo(dates,confirmed_data)
+            death_sum = getDayInfo(dates,deaths_data)
+            recover_sum = getDayInfo(dates,recovered_data)
             plotDaily(dates,confirm_sum,death_sum,recover_sum)
         # Country Wise Stats
         elif selection == '3':
