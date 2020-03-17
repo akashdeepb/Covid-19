@@ -350,7 +350,7 @@ def menu():
         elif selection == '5':
             webbrowser.open_new('https://covid19.locale.ai')
             print('Powered by : haxzie [ https://github.com/haxzie ]\nGitHub: https://github.com/localeai/covid19-live-visualization\nURL: https://covid19.locale.ai')
-            input()
+            input("Press any key to Continue...")
         elif selection == '9':
             update(False)
             clear()
