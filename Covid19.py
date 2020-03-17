@@ -105,7 +105,8 @@ def menu():
         1. World Timeline 
         2. Daywise Graph
         3. Country Stats
-        4. Visual World Map*
+        4. Versus Stats
+        5. Visual World Map*
 
         9. Update Data
 
@@ -157,11 +158,13 @@ def menu():
                     for country in countries:
                         print(country)
                 # Exit back to Main Menu
-                elif sel == '-x' or sel == 'exit':
+                elif sel == '-x' or sel == 'exit' or sel == '0':
                     break
                 else:
                     # Search for Country with similar name
-                    similar = [country for country in countries if sel in country.lower()]
+                    similar = [country for country in countries if sel == country.lower()]
+                    if len(similar)<1:
+                        similar = [country for country in countries if sel in country.lower()]
                     if len(similar) < 1:
                         print("Country Not Found.")
                     elif len(similar) == 1:
@@ -205,8 +208,48 @@ def menu():
                         print("Found ",len(similar)," Matches")
                         for country in similar:
                             print(country)
-        # Another Free Promo :3
         elif selection == '4':
+            clear()
+            banner()
+            exitFlag=False
+            while(not exitFlag):
+                print("\n\033[33mEnter -c or --countries to see the List of Countries/Regions\nPress 'Enter key' once you're done entering countries\n\033[36mEnter -x or exit to go back to Main Menu\033[0m\n\n")
+                countries = confirmed_data['Country/Region'].sort_values().unique()
+                versusCountries = []
+                while(True):
+                    if len(versusCountries) > 0:
+                        print("\033[34mCountries in List : ")
+                        for country in versusCountries:
+                            print(country)
+                        print("\033[0m")
+                    sel = input("Enter Country/Region : ")
+                    sel = sel.lower()
+                    if sel == '-c' or sel =='--countries':
+                        for country in countries:
+                            print(country)
+                     elif sel == '-x' or sel == 'exit' or sel == '0':
+                        exitFlag=True
+                        break
+                    elif sel == "":
+                        # Start Plot
+                        for country in versusCountries:
+                            print(len(versusCountries))
+                    else:
+                        similar = [country for country in countries if sel == country.lower()]
+                        if len(similar) < 1:
+                            similar = [country for country in countries if sel in country.lower()]
+                        if len(similar) < 1:
+                            print("Country Not Found")
+                        elif len(similar) == 1:
+                            versusCountries.append(similar[0])
+                        else:
+                            print("Found ",len(similar)," Matches")
+                            for country in similar:
+                                print(country)
+                            
+
+        # Another Free Promo :3
+        elif selection == '5':
             webbrowser.open_new('https://covid19.locale.ai')
             print('Powered by : haxzie [ https://github.com/haxzie ]\nGitHub: https://github.com/localeai/covid19-live-visualization\nURL: https://covid19.locale.ai')
             input()
